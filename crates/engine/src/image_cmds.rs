@@ -173,6 +173,8 @@ enum Method {
     Automatic,
 }
 
+/// An Image Size `resample` name as a method: `none` (keep the pixels), `automatic`, or a filter;
+/// an unknown name is Bicubic, Image Size's own default.
 fn parse_resample(s: &str) -> Method {
     Method::Filter(match s {
         "none" => return Method::None,

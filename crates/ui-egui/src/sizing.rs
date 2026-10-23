@@ -206,6 +206,7 @@ fn unit_dropdown(ui: &mut egui::Ui, f: &mut Map<String, Value>, id: &str) {
     }
 }
 
+/// The Image Size dialog body: dimensions, resolution, constrain, and the Resample method list.
 fn image_size(ui: &mut egui::Ui, f: &mut Map<String, Value>) {
     let t = Tokens::get(ui.ctx());
     let (ow, oh) = (num(f, "__origW"), num(f, "__origH"));

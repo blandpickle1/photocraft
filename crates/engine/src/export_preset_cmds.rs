@@ -213,6 +213,7 @@ fn delete(s: &mut Session, p: &Value) -> Result<Value> {
     Ok(json!({"deleted": name}))
 }
 
+/// The Export As preset commands: list, save and delete.
 pub fn specs() -> Vec<CommandSpec> {
     vec![
         CommandSpec {

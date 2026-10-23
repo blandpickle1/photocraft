@@ -1903,6 +1903,7 @@ fn clear_canvas_guides(s: &mut Session) -> Result<Value> {
 
 // ---------- registry ----------
 
+/// The File-menu command specs this module adds (see the module docs), including Fit Image.
 pub fn specs() -> Vec<CommandSpec> {
     macro_rules! spec {
         ($id:expr, $label:expr, $menu:expr, $sc:expr, $params:expr, $enabled:expr, $run:expr) => {

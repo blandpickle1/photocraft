@@ -176,6 +176,7 @@ fn keys(method: Resample, s: f64) -> Kernel {
     Kernel::Keys { a, stretch: stretch / s }
 }
 
+/// The Keys cubic's weight at distance `x` (source pixels) for parameter `a`: Photoshop's bicubic family.
 fn keys_weight(x: f64, a: f64) -> f64 {
     let x = x.abs();
     if x < 1.0 {
@@ -187,6 +188,7 @@ fn keys_weight(x: f64, a: f64) -> f64 {
     }
 }
 
+/// The Lanczos-3 weight at distance `x` (source pixels): `sinc(x)·sinc(x/3)` inside ±3, else 0.
 fn lanczos_weight(x: f64) -> f64 {
     let x = x.abs();
     if x < 1e-9 {
@@ -615,6 +617,8 @@ mod tests {
         s
     }
 
+    /// The fixed-channel row kernels give exactly what the generic one does, for every kernel
+    /// (Photoshop's and the added shapes), scale and edge mode.
     #[test]
     fn fixed_channel_rows_match_dynamic_resampling() {
         fn check<const N: usize>() {
