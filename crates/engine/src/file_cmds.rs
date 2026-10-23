@@ -1988,7 +1988,7 @@ pub fn specs() -> Vec<CommandSpec> {
             "Fit Image…",
             &["File", "Automate"],
             None,
-            r##"{"width":px,"height":px,"dontEnlarge":bool=false,"resample":"automatic|preserveDetails|bicubicSmoother|bicubicSharper|bicubicAutomatic|bicubic|nearest|bilinear|lanczos"="bicubic"}"##,
+            r##"{"width":px,"height":px,"dontEnlarge":bool=false,"resample":"automatic|preserveDetails|bicubicSmoother|bicubicSharper|bicubicAutomatic|bicubic|nearest|bilinear|lanczos|lanczos2|lanczos4|mitchell|catmullRom|bSpline|gaussian|hermite|spline16|spline36"="bicubic"}"##,
             has_doc,
             fit_image
         ),
