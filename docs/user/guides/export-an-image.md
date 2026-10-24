@@ -17,7 +17,7 @@ Choose **File › Export › Export As…**, set the format, and click **Export*
    - **TGA** has **Resolution**: **Auto**, **24 bits/pixel** or **32 bits/pixel**.
    - **Transparency** keeps transparent areas. JPG has no transparency, so this checkbox is not shown for JPG and the image is flattened.
    - **Metadata** is **None** or **All**.
-4. Under **Image Size**, set **Scale** in percent. The size in pixels shows below it. **Resample** picks how the image is resized; see [Choose a resampling method](choose-a-resampling-method.md).
+4. Under **Image Size**, set **Scale** in percent. The size in pixels shows below it.
 5. Check the preview on the right. The line under it shows the format and the estimated file size.
 6. Click **Export**, then choose a name and a place for the file.
 
