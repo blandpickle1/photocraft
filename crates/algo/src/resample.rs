@@ -617,6 +617,52 @@ mod tests {
         s
     }
 
+    /// Adding the new kernels left Lanczos 3 (and Preserve Details, which enlarges with it)
+    /// exactly as it was: its weights match, bit for bit, the code it replaced (copied here from
+    /// release 0.14.0) at every scale, offset and edge mode.
+    #[test]
+    fn lanczos3_weights_are_unchanged() {
+        let old = |o: i32, scale: f64, edge: Option<(i32, i32)>| {
+            let stretch = if scale < 1.0 { 1.0 / scale } else { 1.0 };
+            let u = (o as f64 + 0.5) / scale - 0.5;
+            let u = edge.map_or(u, |(a, b)| u.clamp(a as f64, b.max(a) as f64));
+            let lo = (u - 3.0 * stretch).ceil() as i32;
+            let hi = (u + 3.0 * stretch).floor() as i32;
+            let w: Vec<f64> = (lo..=hi).map(|i| lanczos_weight((i as f64 - u) / stretch)).collect();
+            let sum: f64 = w.iter().sum();
+            let k = if sum.abs() > 1e-12 { 1.0 / sum } else { 1.0 };
+            (lo, w.into_iter().map(|v| v * k).collect::<Vec<f64>>())
+        };
+        for scale in [0.07, 0.12, 0.5, 0.75, 1.0, 1.5, 2.3, 8.0] {
+            for o in -3..40 {
+                for edge in [None, Some((0, 31)), Some((5, 5))] {
+                    assert_eq!(weights(o, scale, Kernel::Window(Shape::Lanczos(3.0)), edge), old(o, scale, edge), "scale {scale}, o {o}, edge {edge:?}");
+                }
+            }
+        }
+        assert_eq!(format!("{:?}", plan(Resample::Lanczos, 2.0, 2.0)), format!("{:?}", plan(Resample::PreserveDetails, 2.0, 2.0)));
+    }
+
+    /// Saved choices keep their meaning: the existing methods keep their serialized names and
+    /// Bicubic stays the default; the new ones only add names.
+    #[test]
+    fn saved_method_names_and_default_are_unchanged() {
+        assert_eq!(Resample::default(), Resample::Bicubic);
+        for (m, name) in [
+            (Resample::Nearest, "nearest"),
+            (Resample::Bilinear, "bilinear"),
+            (Resample::Bicubic, "bicubic"),
+            (Resample::BicubicSmoother, "bicubicSmoother"),
+            (Resample::BicubicSharper, "bicubicSharper"),
+            (Resample::BicubicAutomatic, "bicubicAutomatic"),
+            (Resample::Lanczos, "lanczos"),
+            (Resample::PreserveDetails, "preserveDetails"),
+        ] {
+            assert_eq!(serde_json::to_value(m).unwrap(), serde_json::json!(name));
+            assert_eq!(serde_json::from_value::<Resample>(serde_json::json!(name)).unwrap(), m);
+        }
+    }
+
     /// The fixed-channel row kernels give exactly what the generic one does, for every kernel
     /// (Photoshop's and the added shapes), scale and edge mode.
     #[test]

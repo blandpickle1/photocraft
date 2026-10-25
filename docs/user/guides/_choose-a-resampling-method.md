@@ -52,6 +52,21 @@ When you make an image bigger or smaller, the **Resample** method decides how ne
 
 In **Image Size**, some names carry a hint in brackets, for example **Lanczos 4 (sharpest)**, **Spline36 (sharp, less ringing)** or **B-Spline (smoothest)**.
 
+## Sharpness, ringing and overshoot
+
+The sharper a method is, the more it tends to **ring**: thin light and dark outlines appear on both sides of a hard edge, such as text, a horizon or a dark branch against the sky. Where the outline is brighter or darker than anything near it, the method **overshoots**. In bright or dark areas that can clip to pure white or black.
+
+| Rings and overshoots | Most | Some | A little | Never |
+|---|---|---|---|---|
+| Methods | **Lanczos 4**, **Bicubic Sharper** | **Lanczos 3**, **Preserve Details**, **Bicubic** | **Lanczos 2**, **Spline36**, **Spline16**, **Catmull-Rom**, **Bicubic Smoother**, **Mitchell-Netravali** (barely) | **Hermite**, **B-Spline**, **Gaussian**, **Bilinear**, **Nearest Neighbor** |
+
+**Bicubic Automatic** behaves like **Bicubic Sharper** when it shrinks the image and like **Bicubic Smoother** when it enlarges it.
+
+- **Photos** rarely show ringing at normal viewing sizes: the sharp methods are usually the best choice.
+- **Text, logos, line art and screenshots** have hard edges, where outlines show most. Pick **Mitchell-Netravali**, **Hermite** or **B-Spline**, or **Nearest Neighbor** to keep pixel edges exact.
+- If you see halos after a sharp method, step down a column: **Lanczos 3** to **Spline36** or **Lanczos 2**, then to **Mitchell-Netravali**.
+- Methods that never ring are softer: they trade a little detail for clean edges.
+
 ## Things to know
 
 - **Image Size** changes the document. Choose **Edit › Undo** to go back.

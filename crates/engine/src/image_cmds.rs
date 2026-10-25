@@ -1010,6 +1010,34 @@ pub fn specs() -> Vec<CommandSpec> {
 mod tests {
     use super::*;
 
+    /// Every name Image Size accepted before the new filters still means the same method, the
+    /// Lanczos alias is kept, and an unknown name still falls back to Bicubic.
+    #[test]
+    fn existing_resample_names_keep_their_meaning() {
+        let filter = |n: &str| match parse_resample(n) {
+            Method::Filter(r) => Some(r),
+            _ => None,
+        };
+        assert!(matches!(parse_resample("none"), Method::None));
+        assert!(matches!(parse_resample("automatic"), Method::Automatic));
+        for (n, r) in [
+            ("nearest", Resample::Nearest),
+            ("bilinear", Resample::Bilinear),
+            ("bicubic", Resample::Bicubic),
+            ("bicubicSmoother", Resample::BicubicSmoother),
+            ("bicubicSharper", Resample::BicubicSharper),
+            ("bicubicAutomatic", Resample::BicubicAutomatic),
+            ("lanczos", Resample::Lanczos),
+            ("lanczos3", Resample::Lanczos),
+            ("preserveDetails", Resample::PreserveDetails),
+            ("sinc", Resample::Bicubic),
+        ] {
+            assert_eq!(filter(n), Some(r), "{n}");
+        }
+        assert_eq!(crate::export_preset_cmds::RESAMPLE[0].0, crate::export_preset_cmds::DEFAULT_RESAMPLE);
+        assert_eq!(crate::export_preset_cmds::DEFAULT_RESAMPLE, "bicubicAutomatic");
+    }
+
     #[test]
     fn crop_rejects_rectangles_that_would_wrap() {
         let mut s = session();
